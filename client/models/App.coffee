@@ -9,7 +9,8 @@ class window.App extends Backbone.Model
     (@get 'playerHand').on 'stand', @dealerTurn, @
 
   gameOver: ->
-    console.log('Game over, DOOD!') #TODO: re-deal
+    alert('Game over, DOOD!') #TODO: re-deal
+    do @newHand
 
   dealerTurn: ->
     do (@get 'dealerHand').at(0).flip
@@ -17,10 +18,29 @@ class window.App extends Backbone.Model
     while (do @get('dealerHand').score) < 17
       do (@get 'dealerHand').hit
 
-    @scoreGame (do (@get 'playerHand').score), (do (@get 'dealerHand').score)
+    @scoreHand (do (@get 'playerHand').score), (do (@get 'dealerHand').score)
 
-  scoreGame: (playerScore, dealerScore) ->
-    if dealerScore > 21 then console.log 'Dealer busts!'
-    else if playerScore > dealerScore then console.log 'Player WINS!!!!1!!!!!11!!!! THATS YOU!!!!'
-    else if playerScore < dealerScore then console.log 'Dealer wins :('
-    else console.log "puuuuushhh ugghh"
+  scoreHand: (playerScore, dealerScore) ->
+    if dealerScore > 21 then alert 'Dealer busts!'
+    else if playerScore > dealerScore then alert 'Player WINS!!!!1!!!!!11!!!! THATS YOU!!!!'
+    else if playerScore < dealerScore then alert 'Dealer wins :('
+    else alert "puuuuushhh ugghh"
+    do @newHand
+
+  newHand: ->
+    window.app = @
+    playerHand = @get 'playerHand'
+    dealerHand = @get 'dealerHand'
+    playerHand.reset()
+    dealerHand.reset()
+    playerHand.hit()
+    playerHand.hit()
+    dealerHand.hit()
+    dealerHand.hit()
+    dealerHand.at(0).flip()
+
+    # @set 'playerHand', (@get 'deck').dealPlayer()
+    # # get the hand view and set its model to the new hand
+    # #
+    # @set 'dealerHand', (@get 'deck').dealDealer()
+
